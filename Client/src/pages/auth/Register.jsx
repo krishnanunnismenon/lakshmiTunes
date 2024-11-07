@@ -3,6 +3,32 @@ import { useFormik } from 'formik'
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import * as Yup from 'yup';
+
+const validateSchema = Yup.object({
+  firstName: Yup.string()
+    .matches(/^[A-Za-z]+$/, "First name should only contain alphabets")
+    .required("First name is required"),
+  lastName: Yup.string()
+    .matches(/^[A-Za-z]+$/, "Last name should only contain alphabets")
+    .required("Last name is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+
+  password: Yup.string()
+    .min(8, "Password must be at least 8 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/\d/, "Password must contain at least one digit")
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character"
+    )
+    .required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Please confirm your password"),
+})
 
 
 export const Register = () => {
@@ -16,9 +42,16 @@ export const Register = () => {
         password:"",
         confirmPassword:"",
       },
-      
-      onSubmit: values=>{
-        console.log(values);
+      validationSchema: validateSchema,
+
+      onSubmit: async(values)=>{
+        try {
+
+          const response = await 
+          
+        } catch (error) {
+          
+        }
         
       }
     })
@@ -35,6 +68,9 @@ export const Register = () => {
       onBlur = {formik.handleBlur}
       value = {formik.values.firstName}
       />
+      {formik.touched.firstName && formik.errors.firstName &&(
+        <Label>{formik.errors.firstName}</Label>
+      )}
       
       <Label>Last Name</Label>
       <Input
@@ -46,6 +82,10 @@ export const Register = () => {
       value = {formik.values.lastName}
       />
 
+      {formik.touched.lastName && formik.errors.lastName &&(
+        <Label>{formik.errors.lastName}</Label>
+      )}
+
       <Label>Email</Label>
       <Input
       id="email"
@@ -55,6 +95,10 @@ export const Register = () => {
       onBlur = {formik.handleBlur}
       value = {formik.values.email}
       />
+
+      {formik.touched.email && formik.errors.email &&(
+        <Label>{formik.errors.email}</Label>
+      )}
 
       <Label>Password</Label>
       <Input
@@ -66,6 +110,10 @@ export const Register = () => {
       value = {formik.values.password}
       />
 
+      {formik.touched.password && formik.errors.password &&(
+        <Label>{formik.errors.password}</Label>
+      )}
+
       <Label>Confirm Password</Label>
       <Input
       id="confirmPassword"
@@ -75,6 +123,10 @@ export const Register = () => {
       onBlur = {formik.handleBlur}
       value = {formik.values.confirmPassword}
       />
+
+      {formik.touched.confirmPassword && formik.errors.confirmPassword &&(
+        <Label>{formik.errors.confirmPassword}</Label>
+      )}
 
       <Button type="submit">Register</Button>
       </form>
